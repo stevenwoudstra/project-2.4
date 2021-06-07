@@ -7,4 +7,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'omega-share';
+  isAuthenticated: boolean;
+
+  constructor() {
+    this.isAuthenticated = false;
+  }
+
+  login() {
+  }
+
+  logout() {
+  }
 }
