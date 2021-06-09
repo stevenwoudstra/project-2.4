@@ -14,7 +14,11 @@ export class HeaderComponent implements OnInit {
   }
 
   goToHome() {
-    window.location.href = "/";
+    window.location.href = "/home";
+  }
+
+  goToSupport() {
+    window.location.href = "/support";
   }
 
 }

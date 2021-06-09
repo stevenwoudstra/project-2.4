@@ -1,9 +1,8 @@
-/* a#logo {
-    color: white;
-    text-decoration: none;
+a.navbar-brand, a.nav-link {
     cursor: pointer;
 }
 
-a#logo:hover {
-    color: lightgray;
-} */
+.navbar-nav > .active > a{
+    pointer-events: none;
+    color: #ffffffbf;
+}
