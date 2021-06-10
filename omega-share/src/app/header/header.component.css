@@ -4,5 +4,5 @@ a.navbar-brand, a.nav-link {
 
 .navbar-nav > .active > a{
     pointer-events: none;
-    color: #ffffffbf;
+    color: #ffffffdd;
 }
