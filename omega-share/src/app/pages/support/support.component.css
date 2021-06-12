@@ -1,0 +1,19 @@
+.accordion-button:not(.collapsed) {
+    background-position: right;
+    color: black;
+}
+
+.accordion-button {
+    background-image: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 25%, rgba(255,192,74,1) 75%, rgba(255,99,71,1) 100%);
+    background-size: 400%;
+    background-position: left;
+    transition: background-position 1s;
+}
+
+.accordion-button:after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
