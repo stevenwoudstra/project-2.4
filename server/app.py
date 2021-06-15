@@ -103,7 +103,10 @@ def login():
 
 
 ###data
-
+@app.route('/user/all', methods=['GET'])
+@require_token
+def get_users():
+	return {'message': 'TEST OK'}
 
 
 
