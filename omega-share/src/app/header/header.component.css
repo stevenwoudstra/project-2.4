@@ -6,3 +6,17 @@ a.navbar-brand, a.nav-link {
     pointer-events: none;
     color: #ffffffdd;
 }
+
+.navbar-toggler {
+    box-shadow: none;
+}
+
+.navbar-toggler:not(.collapsed) > .navbar-toggler-icon {
+    transform: rotate(90deg);
+    transition: transform .5s ease-in-out;
+}
+
+.navbar-toggler.collapsed > .navbar-toggler-icon {
+    transition: transform .5s ease-in-out;
+    
+}
