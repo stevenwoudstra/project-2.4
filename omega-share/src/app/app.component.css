@@ -1,7 +1,13 @@
 #bg {
     padding-bottom: 3rem;
 
-    background-position-y: -5vh;
+    background-size: 100vw 100vh;
     
     background-repeat: no-repeat;
+}
+
+@media (max-width: 576px) {
+    #bg {
+        background-size: 177.8vh;
+    }
 }
