@@ -49,7 +49,7 @@ def create_token(user_id):
 	token = jwt.encode(
 		{
 			'user_id': user_id,
-			'exp': datetime.datetime.now() + datetime.timedelta(minutes=120)
+			'exp': datetime.datetime.now() + datetime.timedelta(minutes=1)
 		},
 		app.config['SECRET_KEY'], 
 		"HS256"
@@ -69,10 +69,11 @@ def pass_hash(passwd):
 ###register
 @app.route('/user/register', methods=['POST'])
 def create_user():
-	req_data = request.get_json()
+	req_data = request.get_json(force=True)
+	print(req_data['username'])
 
 	user = User(
-			username = req_data['user_name'],
+			username = req_data['username'],
 			email = req_data['email'],
 			password = pass_hash(req_data['password']),
 	)
@@ -83,20 +84,22 @@ def create_user():
 ###login
 @app.route('/user/login', methods=['POST'])
 def login():
-	user_data = request.authorization
+	user_data =request.get_json(force=True)
 
-	if not user_data or not user_data.username or not user_data.password:
-		return unauthorized()
+	if not user_data or not user_data['username'] or not user_data['password']:
+		
+		return unauthorized('nodata')
 
-	user = get_user(user_data.username)
+	user = get_user(user_data['username'])
 	if user is False:
-		return unauthorized()
+		return unauthorized('wrong username')
 
-	if user.password is pass_hash(user_data.password):
+	if user.password == pass_hash(user_data['password']):
 		token = create_token(user.id)
 		return jsonify({'token': token})
-
-	return unauthorized()
+	print(user.password)
+	print(pass_hash(user_data['password']))
+	return unauthorized('no matching password')
 	
 
 
@@ -112,7 +115,8 @@ def get_users():
 
 ###401
 
-def unauthorized():
+def unauthorized(wy):
+	print(wy)
 	return make_response('faild to login', 401, {'Authentication': 'FAILD'})
 
 
