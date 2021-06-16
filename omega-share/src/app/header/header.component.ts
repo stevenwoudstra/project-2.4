@@ -13,12 +13,10 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  goToHome() {
-    window.location.href = "/home";
-  }
-
-  goToSupport() {
-    window.location.href = "/support";
+  navbarClick() {
+    if(window.matchMedia("(max-width: 575px)").matches) {
+      document.getElementById("navbar-btn")?.click();
+    }
   }
 
 }

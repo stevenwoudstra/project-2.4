@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
 
   toggle(): void {
     if (this.logOrReg == "log") this.logOrReg = "reg"; else this.logOrReg = "log";
-    console.log(this.logOrReg);
   }
 
 }

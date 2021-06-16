@@ -1,3 +1,7 @@
-.min-vh-100 {
+#bg {
     padding-bottom: 3rem;
+
+    background-position-y: -5vh;
+    
+    background-repeat: no-repeat;
 }
