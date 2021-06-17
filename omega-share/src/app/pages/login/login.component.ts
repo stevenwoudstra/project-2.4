@@ -7,16 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  logOrReg: string = "log";
-
   constructor() { }
 
   ngOnInit(): void {
 
-  }
-
-  toggle(): void {
-    if (this.logOrReg == "log") this.logOrReg = "reg"; else this.logOrReg = "log";
   }
 
 }
