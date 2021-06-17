@@ -4,8 +4,12 @@
         assets\img\logo_scale,w_200.png 200w,
         assets\img\logo_scale,w_1051.png 1051w,
         assets\img\logo_scale,w_1400.png 1400w" src="logo_scale,w_1400.png" alt="" style="max-width: 19rem;">
-        <h1 class="h3 mb-3 fw-normal">Please log in</h1>
+        <h1 class="h3 mb-3 fw-normal">Register</h1>
 
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <label for="floatingInput">Email address</label>
+        </div>
         <div class="form-floating">
             <input type="username" class="form-control" id="floatingInput" placeholder="JohnDoe99">
             <label for="floatingInput">username</label>
@@ -14,12 +18,13 @@
             <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
         </div>
+        <div class="form-floating">
+            <input type="confirmPassword" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">confirm password</label>
+        </div>
         <div class="mb-3">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
-            <label class="registerToggle" [routerLink]="['/register']">
-                <div>register</div>
+            <label class="registerToggle" [routerLink]="['/login']">
+                <div>login</div>
             </label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
