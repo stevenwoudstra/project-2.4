@@ -7,8 +7,10 @@ import uuid
 import datetime
 from functools import wraps
 import hashlib
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
 
 app.config['SECRET_KEY'] = '1489e0f4ef38021cff66a4a5d1818c76'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -68,6 +70,7 @@ def pass_hash(passwd):
 ######app routes
 ###register
 @app.route('/user/register', methods=['POST'])
+@cross_origin()
 def create_user():
 	req_data = request.get_json(force=True)
 	print(req_data['username'])
@@ -78,6 +81,7 @@ def create_user():
 			password = pass_hash(req_data['password']),
 	)
 	add_to_ddb(user)
+	
 	return {'message': 'success'}
 
 
