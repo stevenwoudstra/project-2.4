@@ -5,6 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SupportComponent } from './pages/support/support.component';
+import { UploadComponent } from './pages/upload/upload.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'support', component: SupportComponent},
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
+  { path: 'upload', component: UploadComponent},
   { path: '**', component: PageNotFoundComponent}
 ];
 
