@@ -1,0 +1,35 @@
+.profile-head {
+    transform: translateY(5rem)
+}
+
+.cover {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.editProfileBtn {
+    color: white;
+    width: 100%;
+    background-size: 120%;
+    opacity: 80%;
+    background-position: left;
+    background-image: linear-gradient(90deg, rgba(255,192,74,1) 0%, rgba(255,99,71,1) 100%);
+    border: none;
+    transition: background-position 0.3s;
+}
+
+.editProfileBtn:hover {
+    background-position: right;
+}
+
+.file {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.file:hover {
+    background-color: rgba(0,0,0,0.03);
+}

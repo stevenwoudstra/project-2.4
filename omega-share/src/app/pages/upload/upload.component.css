@@ -39,6 +39,8 @@ h1 {
 	margin: 34px 2px 2px 2px;
 }
 
+::-webkit-file-upload-button { cursor:pointer; }
+
 .upload-input {
 	position: relative;
 	top: -62px;
@@ -72,4 +74,8 @@ h1 {
 
 .upload-input {
     cursor: pointer;
+}
+
+#file-upload-button {
+	cursor: pointer;
 }
