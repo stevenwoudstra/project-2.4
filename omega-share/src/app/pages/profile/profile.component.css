@@ -24,12 +24,15 @@
 }
 
 .file {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     padding: 0.5rem;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 .file:hover {
+    transform: scale(1.05);
     background-color: rgba(0,0,0,0.03);
+    text-shadow: gray;
 }
