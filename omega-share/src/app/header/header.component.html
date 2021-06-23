@@ -24,7 +24,12 @@
                         [routerLink]="['/support']">Support</a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']">
-                    <a class="nav-link" routerLink="/login" (click)="navbarClick()" [routerLink]="['/login']">Login</a>
+                    <div *ngIf="isLoggedIn; else elseBlock">
+                        <a href class="nav-link" (click)="logout()">Logout</a>
+                    </div>
+                    <ng-template #elseBlock>
+                        <a class="nav-link" routerLink="/login" (click)="navbarClick()" [routerLink]="['/login']">Login</a>
+                    </ng-template>
                 </li>
             </ul>
         </div>
