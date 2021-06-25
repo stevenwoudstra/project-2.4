@@ -1,3 +1,4 @@
+import { getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
 
   isLoggedIn = false;
   isLoginFailed = false;
+  id = null
   errorMessage = '';
   roles: string[] = [];
 
@@ -44,14 +46,13 @@ export class LoginComponent implements OnInit {
     console.log("kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
     this.authService.login(username, password).subscribe(
       data => {
-        this.tokenStorage.saveToken(data);
+        this.tokenStorage.saveToken(data.access_token);
         console.log(data.access_token);
-        this.tokenStorage.saveUser(data.user);
+        this.id= data.user.id
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
-        this.reloadPage();
+        this.getData();
       },
       err => {
         this.errorMessage = err.error.message;
@@ -59,6 +60,27 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+  getData(): void {
+    this.authService.afterLogin(this.id).subscribe(
+      data => {
+        this.tokenStorage.saveUser(data.user);
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
+              
+        // this.reloadPage();
+        this.router.navigate(['/profile']);
+      },
+      err => {
+        this.errorMessage = err.error.message;
+        this.isLoginFailed = true;
+        this.tokenStorage.signOut()
+        // this.reloadPage();
+      }
+    );
+  }
+
+  
 
   reloadPage(): void {
     window.location.reload();

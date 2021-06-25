@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from '../../_services/token-storage.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,29 +9,24 @@ import { Component, OnInit } from '@angular/core';
 export class ProfileComponent implements OnInit {
 
   profilePicture: string = "assets/placeholder pictures/stock_profile_picture.png";
-
   firstName: string = "John";
-
   lastName: string = "Doe";
-
   username: string = "JohnDoe99";
-
   email: string = "JohnDoe@sample.com";
-
   amountOfPosts: number = 12;
-
   likes: number = 0;
-
   about: string = "Empty";
-
   banner: string = "assets/placeholder pictures/stock banner.jpg";
-
   fileTypes: string[] = ["ACC", "AE", "AI", "AN", "AVI", "BMP", "CSV", "DAT", "DGN", "DOC", "DOCH", "DOCM", "DOCX", "DOTH", "DW", "DWFX"];
 
-  constructor() { }
+  constructor(private token: TokenStorageService) { }
 
   ngOnInit(): void {
     document.getElementById("banner")!.style.backgroundImage = "url('" + this.banner + "')";
+    const user = this.token.getUser();
+    this.email = user.email;
+    this.username = user.username;
+
   }
 
   getRandomType(): string {

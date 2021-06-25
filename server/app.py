@@ -9,11 +9,14 @@ from functools import wraps
 import hashlib
 from flask_cors import CORS, cross_origin
 import sys
+from werkzeug.exceptions import HTTPException
+import json
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from sqlalchemy.orm import backref
 
 
 app = Flask(__name__)
@@ -105,18 +108,18 @@ def create_user():
 def login():
 	username = request.json.get("username", None)
 	password = request.json.get("password", None)
-
+	role = "user"
 	if not username or not password:
 		
 		return unauthorized('nodata')
 
-	user = get_user(username)
+	user = get_user_by_name(username)
 	if user is False:
 		return unauthorized('wrong username')
 
 	if user.password == pass_hash(password):
 		access_token = create_access_token(identity=username)
-		return jsonify(access_token=access_token, user={"roles":"admin"})
+		return jsonify(access_token=access_token, user={"id":user.id})
 	print(user.password)
 	print(pass_hash(password))
 	return unauthorized('no matching password')
@@ -127,12 +130,40 @@ def login():
 
 ###data
 @app.route('/user/all', methods=['GET'])
-# @require_token
 @jwt_required() 
 def get_users():
 	return {'message': 'TEST OK'}
 
+@app.route("/user/profile/<username>", methods=['GET'])
+@jwt_required()
+def get_user_profile(username):
+	user = get_user_by_name(username)
+	if not user:
+		return make_response('faild to find user', 404)
+	return {
+			"userid":user.id,
+			"username":user.username,
+			"email":user.email,
+			"role":user.admin
+			}
 
+@app.route("/user/info/<id>", methods=['GET'])
+@jwt_required()
+def get_user(id):
+	print("it executes")
+	user = get_user_by_id(id)
+	role = "user"
+	if not user:
+		return make_response('faild to find user', 404)
+	if user.admin is True:
+		role = "admin"
+	return { "user":{
+				"userid":user.id,
+				"username":user.username,
+				"email":user.email,
+				"role":role
+				}
+			}
 
 ###401
 
@@ -140,6 +171,20 @@ def unauthorized(wy):
 	print(wy)
 	return make_response('faild to login', 401, {'Authentication': 'FAILD'})
 
+####### general http error logging
+@app.errorhandler(HTTPException)
+def handle_exception(e):
+    """Return JSON instead of HTML for HTTP errors."""
+    # start with the correct headers and status code from the error
+    response = e.get_response()
+    # replace the body with JSON
+    response.data = json.dumps({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+    })
+    response.content_type = "application/json"
+    return response
 
 ######ddb code
 ### ddb functions
@@ -149,13 +194,34 @@ def add_to_ddb(new_object):
 	db.session.commit()
 
 
-def get_user(username):
+def get_user_by_name(username):
 	user = User.query.filter_by(username=username).first()
 	if not user:
 		return False
 	return user
 
+def get_user_by_id(id):
+	user = User.query.filter_by(id=id).first()
+	if not user:
+		return False
+	return user
 
+
+
+###ddb tabels
+share = db.Table( 
+				'shares',
+				db.Column(
+						'user_id',
+						db.Integer,
+						db.ForeignKey('user.id', ondelete="cascade"),
+				),
+				db.Column(
+						'file_id',
+						db.Integer,
+						db.ForeignKey('file.id', ondelete="cascade"),
+				),
+				)
 
 ###ddb classes
 class User(db.Model):
@@ -164,6 +230,7 @@ class User(db.Model):
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	password = db.Column(db.String(64), nullable=False)
 	admin = db.Column(db.Boolean, default=False)
+	files = db.relationship('File',secondary=share , backref=db.backref('users', lazy=True))
 
 	def __repr__(self):
 		return '<User %r>' % self.username
@@ -174,6 +241,8 @@ class File(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	type = db.Column(db.String(15))
 
+	def __repr__(self):
+		return '<File %r>' % self.url
 
 
 
