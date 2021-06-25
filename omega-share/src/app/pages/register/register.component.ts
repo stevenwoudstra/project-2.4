@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
 
   ngAfterViewInit(): void {
     if(this.router.url == "/register/1") {
-      document.getElementById("form-signin")?.classList.remove("omega-zoom-in");
+      document.getElementById("form-signin")?.classList.remove("omega-fade-in");
     } else {
       document.getElementById("input-fields-1")?.classList.remove("input-fields");
       document.getElementById("input-fields-2")?.classList.remove("input-fields");
