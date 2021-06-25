@@ -21,6 +21,7 @@ uuid = "*"
 datetime = "*"
 pyjwt = "*"
 flask-cors = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
