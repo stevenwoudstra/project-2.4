@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   
   ngAfterViewInit(): void {
     if(this.router.url == "/login/1") {
-      document.getElementById("form-signin")?.classList.remove("omega-zoom-in");
+      document.getElementById("form-signin")?.classList.remove("omega-fade-in");
     } else {
       document.getElementById("input-fields-1")!.outerHTML = "";
       document.getElementById("input-fields-2")!.outerHTML = "";
