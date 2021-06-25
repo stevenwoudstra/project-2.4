@@ -1,0 +1,18 @@
+@keyframes zoom-animation {
+    from {
+        /* transform: scale(0.9); */
+        opacity: 0;
+    }
+    to {
+        /* transform: scale(1); */
+        opacity: 1;
+    }
+}
+
+.omega-fade-in {
+    animation: 0.2s ease-in-out 0s zoom-animation;
+}
+
+body {
+    overscroll-behavior: none;
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../_services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,9 +16,19 @@ export class RegisterComponent implements OnInit {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    if(this.router.url == "/register/1") {
+      document.getElementById("form-signin")?.classList.remove("omega-zoom-in");
+    } else {
+      document.getElementById("input-fields-1")?.classList.remove("input-fields");
+      document.getElementById("input-fields-2")?.classList.remove("input-fields");
+      document.getElementById("buttons")?.classList.remove("buttons");
+    }
   }
 
   onSubmit(): void {

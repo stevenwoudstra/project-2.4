@@ -1,3 +1,30 @@
+@keyframes animation-fields {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes animation-buttons {
+    from {
+        transform: translateY(-137%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+.input-fields {
+    animation: 0.3s ease-in-out 0s animation-fields;
+    padding: 0;
+}
+
+.buttons {
+    animation: 0.3s ease-in-out 0s animation-buttons;
+}
+
 .form-signin {
     width: 100%;
     max-width: 330px;

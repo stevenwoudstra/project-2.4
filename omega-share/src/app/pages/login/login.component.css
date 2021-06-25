@@ -1,3 +1,32 @@
+@keyframes animation-fields-login {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0);
+    }
+}
+
+@keyframes animation-buttons-login {
+    from {
+        transform: translateY(0%);
+    }
+    to {
+        transform: translateY(-137%);
+    }
+}
+
+.input-fields-login {
+    animation: 0.3s ease-in-out 0s animation-fields-login;
+    transform: scale(0);
+    padding: 0;
+}
+
+.buttons-login {
+    animation: 0.3s ease-in-out 0s animation-buttons-login;
+    transform: translateY(-137%);
+}
+
 .form-signin {
     width: 100%;
     max-width: 330px;

@@ -13,7 +13,9 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: 'support', component: SupportComponent},
   { path: 'login', component: LoginComponent},
+  { path: 'login/1', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
+  { path: 'register/1', component: RegisterComponent},
   { path: 'profile', component: ProfileComponent},
   { path: 'upload', component: UploadComponent},
   { path: '**', component: PageNotFoundComponent}

@@ -13,9 +13,11 @@ export class ProfileComponent implements OnInit {
 
   lastName: string = "Doe";
 
-  username: string = "JognDoe99";
+  username: string = "JohnDoe99";
 
-  amountOfPosts: number = 0;
+  email: string = "JohnDoe@sample.com";
+
+  amountOfPosts: number = 12;
 
   likes: number = 0;
 
@@ -33,6 +35,19 @@ export class ProfileComponent implements OnInit {
 
   getRandomType(): string {
     return this.fileTypes[Math.floor(Math.random() * 16)];
+  }
+
+  editBtn(): void {
+    document.getElementById("edit-field")?.classList.toggle("enabled");
+    if(document.getElementById("edit-field")?.classList.contains("enabled")) {
+      document.getElementById("edit-profile-btn")!.innerHTML = "cancel";
+      document.getElementById("dropzone")!.classList.remove("disabled");
+      document.getElementById("dropzone")!.classList.add("enabled");
+    } else {
+      document.getElementById("edit-profile-btn")!.innerHTML = "edit profile";
+      document.getElementById("dropzone")!.classList.add("disabled");
+      document.getElementById("dropzone")!.classList.remove("enabled");
+    }
   }
 
 }

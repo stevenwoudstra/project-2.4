@@ -1,17 +1,23 @@
-<div class="row py-5 px-4">
+<div class="omega-fade-in profile-page row py-5 px-4">
     <div class="col-md-10 mx-auto">
         <div class="bg-white shadow rounded overflow-hidden">
             <div class="px-4 pb-4 cover" id="banner">
                 <div class="d-flex align-items-end profile-head">
                     <div class="me-3">
+                        <div id="dropzone" class="dropzone img-thumbnail">
+                            <img src="assets/icons/camera.svg" class="upload-icon" style="color: blue"/>
+                            <input type="file" class="upload-input">
+                        </div>
                         <img style="display: block;" src="{{ profilePicture }}" alt="..." width="130"
-                            class="rounded mb-2 img-thumbnail">
-                        <button class="editProfileBtn btn btn-sm" type="button">Edit profile</button>
+                            class="mb-2 img-thumbnail">
+                        <button id="edit-profile-btn" class="edit-profile-btn btn btn-sm" type="button"
+                            (click)="editBtn()">Edit profile</button>
                     </div>
                     <div class="mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{ username }}</h4>
-                        <p class="small mb-4"> <i class="fas fa-map-marker-alt me-2"></i>{{ firstName + " " + lastName
-                            }}</p>
+                        <p class="small mb-4"> <i class="fas fa-map-marker-alt me-2"></i>
+                            {{ firstName + " " + lastName }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -27,6 +33,44 @@
                     </li>
                 </ul>
             </div>
+            <div class="row" id="edit-field">
+                <form class="col-md-6">
+                    <h3 class="ps-2">Change details</h3>
+                    <div class="row g-0">
+                        <div class="col-md-6 ps-2 pe-2">
+                            <label>First name</label>
+                            <input type="text" class="form-control" placeholder="first name" value="{{ firstName }}">
+                        </div>
+                        <div class="col-md-6 ps-2 pe-2">
+                            <label>Last name</label>
+                            <input type="text" class="form-control" value="{{ lastName }}" placeholder="last name">
+                        </div>
+                    </div>
+                    <div class="row g-0">
+                        <div class="ps-2 pe-2">
+                            <label>Email address</label>
+                            <input type="email" class="form-control" placeholder="enter email" value="{{ email }}">
+                        </div>
+                    </div>
+                    <button class="confirm-button btn btn-lg btn-primary ms-2 mt-3 pt-0" type="submit">save</button>
+                </form>
+                <form class="col-md-6 border-start">
+                    <h3 class="ps-2">change password</h3>
+                    <div class="ps-2 pe-2">
+                        <label>old password</label>
+                        <input type="password" class="form-control" placeholder="enter old password" value="">
+                    </div>
+                    <div class="ps-2 pe-2">
+                        <label>new password</label>
+                        <input type="password" class="form-control" placeholder="enter new password" value="">
+                    </div>
+                    <div class="ps-2 pe-2">
+                        <label>confirm password</label>
+                        <input type="password" class="form-control" placeholder="confirm new password" value="">
+                    </div>
+                    <button class="confirm-button btn btn-lg btn-primary ms-2 mt-3 pt-0" type="submit">reset password</button>
+                </form>
+            </div>
             <div class="px-4 py-3">
                 <h5 class="mb-0">About</h5>
                 <div class="p-4 rounded shadow-sm bg-light">
@@ -40,73 +84,85 @@
                 <div class="row">
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>
                     <div class="file col-lg-2 col-sm-4 col-6">
                         <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg" style="width: 40%;" alt="" />
+                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
+                                style="width: 40%;" alt="" />
                             <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
                         </div>
                     </div>

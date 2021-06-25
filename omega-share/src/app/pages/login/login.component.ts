@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { TokenStorageService } from '../../_services/token-storage.service';
 
@@ -19,12 +20,22 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) { }
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
+    }
+  }
+  
+  ngAfterViewInit(): void {
+    if(this.router.url == "/login/1") {
+      document.getElementById("form-signin")?.classList.remove("omega-zoom-in");
+    } else {
+      document.getElementById("input-fields-1")!.outerHTML = "";
+      document.getElementById("input-fields-2")!.outerHTML = "";
+      document.getElementById("buttons")?.classList.remove("buttons-login");
     }
   }
 
