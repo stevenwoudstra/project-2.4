@@ -35,17 +35,17 @@
         </div>
         <!-- end dummy fields -->
 
-        <div id="buttons" class="buttons-login">
-            <div class="text-center form-group">
+        <div class="text-center form-group">
+                <div id="buttons" class="buttons-login">
                 <button class="btn btn-lg btn-primary" type="submit" style="width: 96%;">Login</button>
                 <button class="btn btn-lg btn-primary mt-1" type="button" style="font-size: 0.95rem;"
                     [routerLink]="['/register', '1']">Have no account yet?</button>
+                </div>
                 <div class="form-group">
                     <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
                         Login failed: {{ errorMessage }}
                     </div>
                 </div>
-            </div>
         </div>
     </form>
     <div class="alert alert-success" *ngIf="isLoggedIn">

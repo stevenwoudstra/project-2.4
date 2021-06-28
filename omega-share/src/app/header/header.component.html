@@ -11,7 +11,8 @@
                 assets\img\logo_plat_scale,w_663.png 663w,
                 assets\img\logo_plat_scale,w_1010.png 1010w,
                 assets\img\logo_plat_scale,w_1306.png 1306w,
-                assets\img\logo_plat_scale,w_2160.png 2160w" src="assets\img\logo_plat_scale,w_2160.png" alt="logo" style="max-width: 15rem;">
+                assets\img\logo_plat_scale,w_2160.png 2160w" src="assets\img\logo_plat_scale,w_2160.png" alt="logo"
+                    style="max-width: 15rem;">
             </a>
         </div>
         <div class="collapse navbar-collapse" id="collapse_target">
@@ -20,8 +21,7 @@
                     <a class="nav-link" (click)="navbarClick()" [routerLink]="['/home']">Home</a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']">
-                    <a class="nav-link" (click)="navbarClick()"
-                        [routerLink]="['/support']">Support</a>
+                    <a class="nav-link" (click)="navbarClick()" [routerLink]="['/support']">Support</a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']">
                     <div *ngIf="isLoggedIn; else elseBlock">
@@ -32,6 +32,10 @@
                     </ng-template>
                 </li>
             </ul>
+        </div>
+        <div *ngIf="isLoggedIn;" class="tr-profile">
+            <p class="float-start pe-1">{{ username }}</p>
+            <img class="" src="{{ profilePicture }}" alt="profile picture" width="40px">
         </div>
     </div>
 </nav>

@@ -1,3 +1,21 @@
+@keyframes fileAppear {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes fileAppear2 {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.fileAppear {
+	animation: 0.15s ease-in-out 0s fileAppear;
+}
+
+.fileAppear2 {
+	animation: 0.15s ease-in-out 0s fileAppear2;
+}
+
 .center {
 	position: absolute;
 	top: 50%;
@@ -27,6 +45,20 @@ h1 {
 	color: #666;
 }
 
+@media only screen and (max-width: 768px) {
+    h1.pc {
+		position: fixed;
+		visibility: hidden;
+	}
+}
+
+@media only screen and (min-width: 769px) {
+	h1.mobile {
+		position: fixed;
+		visibility: hidden;
+	}
+}
+
 .dropzone {
 	width: 150px;
 	height: 100px;
@@ -35,18 +67,21 @@ h1 {
 	text-align: center;
 }
 
-.upload-icon {
+.dropzone:hover {
+	background-color: rgba(128, 128, 128, 0.05);
+}
+
+#upload-icon {
 	margin: 34px 2px 2px 2px;
 }
 
 ::-webkit-file-upload-button { cursor:pointer; }
 
 .upload-input {
-	position: relative;
-	top: -62px;
-	left: 0;
-	width: 100%;
-	height: 100%;
+	position: fixed;
+	left: 25%;
+	width: 150px;
+	height: 100px;
 	opacity: 0;
 	cursor: pointer;
 }
@@ -63,16 +98,25 @@ h1 {
 	font-size: 14px;
     color: white;
     font-weight: 400;
+    transition: 0.3s;
 }
 
 .btn:hover {
     background-position: right;
+	transform: scale(1.01);
 }
 
 .btn:focus {
     box-shadow: 0px 0px 5px rgba(255,99,71,1);
 }
 
-#file-upload-button {
-	cursor: pointer;
+#preview-icon {
+	position: fixed;
+	width: 150px;
+	height: 0%;
+}
+
+#preview-icon > img {
+	padding-top: 5px;
+	height: 65px;
 }
