@@ -1,6 +1,7 @@
 import { getLocaleDateFormat } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataSharingService } from 'src/app/_services/data-sharing.service';
 import { AuthService } from '../../_services/auth.service';
 import { TokenStorageService } from '../../_services/token-storage.service';
 
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router, private dataSharingService: DataSharingService) { }
 
   ngOnInit(): void {    
     if (this.tokenStorage.getToken()) {
@@ -69,6 +70,7 @@ export class LoginComponent implements OnInit {
         this.roles = this.tokenStorage.getUser().roles;
               
         // this.reloadPage();
+        this.dataSharingService.isUserLoggedIn.next(true);
         this.router.navigate(['/profile']);
       },
       err => {

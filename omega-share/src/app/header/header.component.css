@@ -20,3 +20,12 @@ a.navbar-brand, a.nav-link {
     transition: transform .5s ease-in-out;
     
 }
+
+.tr-profile > img {
+    background-color: white;
+    border-radius: 50%;
+}
+
+.tr-profile {
+    color: white;
+}

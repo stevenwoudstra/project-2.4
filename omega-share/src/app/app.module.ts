@@ -17,6 +17,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { UploadComponent } from './pages/upload/upload.component';
 
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { DataSharingService } from './_services/data-sharing.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
     HttpClientModule,
     FormsModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders, DataSharingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
