@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
     );
   }
   getData(): void {
-    this.authService.afterLogin(this.id).subscribe(
+    this.authService.afterLogin().subscribe(
       data => {
         this.tokenStorage.saveUser(data.user);
         this.isLoginFailed = false;

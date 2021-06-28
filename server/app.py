@@ -34,6 +34,12 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 ######JWT code
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.query.filter_by(id=identity).one_or_none()
+
 ###tokens decorator 
 
 # def require_token(f):
@@ -118,7 +124,7 @@ def login():
 		return unauthorized('wrong username')
 
 	if user.password == pass_hash(password):
-		access_token = create_access_token(identity=username)
+		access_token = create_access_token(identity=user.id)
 		return jsonify(access_token=access_token, user={"id":user.id})
 	print(user.password)
 	print(pass_hash(password))
@@ -134,24 +140,23 @@ def login():
 def get_users():
 	return {'message': 'TEST OK'}
 
-@app.route("/user/profile/<username>", methods=['GET'])
+@app.route("/user/profile", methods=['GET'])
 @jwt_required()
-def get_user_profile(username):
-	user = get_user_by_name(username)
+def get_user_profile():
+	user = current_user
 	if not user:
 		return make_response('faild to find user', 404)
 	return {
-			"userid":user.id,
-			"username":user.username,
-			"email":user.email,
-			"role":user.admin
+			"first_name": user.first_name,
+			"last_name": user.last_name,
+			"bio": user.bio,
+			"profile_picture": user.profile_picture
 			}
 
-@app.route("/user/info/<id>", methods=['GET'])
+@app.route("/user/info", methods=['GET'])
 @jwt_required()
-def get_user(id):
-	print("it executes")
-	user = get_user_by_id(id)
+def get_user():
+	user = current_user
 	role = "user"
 	if not user:
 		return make_response('faild to find user', 404)
@@ -228,7 +233,11 @@ class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(80), unique=True, nullable=False)
 	email = db.Column(db.String(120), unique=True, nullable=False)
-	password = db.Column(db.String(64), nullable=False)
+	password = db.Column(db.String(64))
+	first_name = db.Column(db.String(64))
+	last_name = db.Column(db.String(64))
+	bio = db.Column(db.String(256))
+	profile_picture = db.Column(db.String(64))
 	admin = db.Column(db.Boolean, default=False)
 	files = db.relationship('File',secondary=share , backref=db.backref('users', lazy=True))
 

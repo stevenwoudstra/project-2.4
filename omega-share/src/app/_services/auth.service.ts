@@ -21,8 +21,8 @@ export class AuthService {
     }, httpOptions);
   }
 
-  afterLogin(id: any): Observable<any> {
-    return this.http.get(AUTH_API + 'info/' + id, {
+  afterLogin(): Observable<any> {
+    return this.http.get(AUTH_API + 'info', {
     });
   }
 

@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getUserProfile(): Observable<any> {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
+    return this.http.get(API_URL + 'profile', { responseType: 'text' });
   }
 
   getAdminPage(): Observable<any> {
