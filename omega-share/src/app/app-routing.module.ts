@@ -7,17 +7,18 @@ import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SupportComponent } from './pages/support/support.component';
 import { UploadComponent } from './pages/upload/upload.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: 'support', component: SupportComponent},
-  { path: 'login', component: LoginComponent},
-  { path: 'login/1', component: LoginComponent},
-  { path: 'register', component: RegisterComponent},
-  { path: 'register/1', component: RegisterComponent},
-  { path: 'profile', component: ProfileComponent},
-  { path: 'upload', component: UploadComponent},
+  { path: 'login', component: LoginComponent, canActivate: [AuthGuard]},
+  { path: 'login/1', component: LoginComponent, canActivate: [AuthGuard]},
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard]},
+  { path: 'register/1', component: RegisterComponent, canActivate: [AuthGuard]},
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+  { path: 'upload', component: UploadComponent, canActivate: [AuthGuard]},
   { path: '**', component: PageNotFoundComponent}
 ];
 

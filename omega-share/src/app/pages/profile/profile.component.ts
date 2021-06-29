@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../../_services/token-storage.service';
 import { UserService } from '../../_services/user.service';
 import { User } from '../../user'
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +22,7 @@ export class ProfileComponent implements OnInit {
   user: any;
 
   errorMessage: any;
-  constructor(private userService: UserService, private token: TokenStorageService) { }
+  constructor(private userService: UserService, private token: TokenStorageService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     const userToken = this.token.getUser();
