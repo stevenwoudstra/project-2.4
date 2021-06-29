@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { LoginComponent } from '../pages/login/login.component';
+import { RegisterComponent } from '../pages/register/register.component';
 
 const AUTH_API = 'http://localhost:5000/user/';
 
@@ -13,6 +16,7 @@ const httpOptions = {
 })
 export class AuthService {
   constructor(private http: HttpClient) { }
+  public isUserLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(AUTH_API + 'login', {
@@ -32,5 +36,12 @@ export class AuthService {
       email,
       password
     }, httpOptions);
+  }
+
+  canUserAccess(route: ActivatedRouteSnapshot) {
+    let logReg = ['login', 'register'];
+    
+    if(logReg.includes(route.url[0].toString())) return !this.isUserLoggedIn.value;
+    return this.isUserLoggedIn.value;
   }
 }

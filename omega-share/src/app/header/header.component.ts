@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AppComponent } from '../app.component';
-import { DataSharingService } from '../_services/data-sharing.service';
+import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from './../_services/token-storage.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
   username: any;
   profilePicture: string = "assets/placeholder pictures/stock_profile_picture.png";
 
-  constructor(private tokenStorageService: TokenStorageService, private dataSharingService: DataSharingService, private router: Router) {
+  constructor(private tokenStorageService: TokenStorageService, private authService: AuthService, private router: Router) {
     router.events.subscribe((val) => {
       this.closeMobileNavbar();
   });
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   
   ngOnInit(): void {
     
-        this.dataSharingService.isUserLoggedIn.subscribe(value => {
+        this.authService.isUserLoggedIn.subscribe(value => {
           this.isLoggedIn = value;
           const user = this.tokenStorageService.getUser();
           this.username = user.username;
@@ -52,7 +52,8 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.tokenStorageService.signOut();
-    this.dataSharingService.isUserLoggedIn.next(false);
+    this.authService.isUserLoggedIn.next(false);
+    this.router.navigate(['/home']);
   }
 
 }

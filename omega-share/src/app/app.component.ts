@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataSharingService } from './_services/data-sharing.service';
+import { AuthService } from './_services/auth.service';
 import { TokenStorageService } from './_services/token-storage.service';
 
 @Component({
@@ -11,9 +11,9 @@ export class AppComponent {
   title = 'omega-share';
   isAuthenticated: boolean;
 
-  constructor(private tokenStorage: TokenStorageService, private dataSharingService: DataSharingService) {
+  constructor(private tokenStorage: TokenStorageService, private authService: AuthService) {
     if(tokenStorage.getToken()) {
-      dataSharingService.isUserLoggedIn.next(true);
+      authService.isUserLoggedIn.next(true);
     }
     this.isAuthenticated = false;
   }
