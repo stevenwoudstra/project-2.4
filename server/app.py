@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 #import jwt
 import uuid
-import datetime
+from datetime import timedelta, timezone, datetime
 from functools import wraps
 import hashlib
 from flask_cors import CORS, cross_origin
@@ -12,15 +12,17 @@ import sys
 from werkzeug.exceptions import HTTPException
 import json
 
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_jwt_extended import current_user
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from flask_jwt_extended import get_jwt
+from flask_jwt_extended import get_jwt_identity
 from sqlalchemy.orm import backref
 
 #export FLASK_ENV=development
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources=r'/*')
 
 app.config['ENV'] = 'development'
 app.config['DEBUG'] = True
@@ -29,6 +31,8 @@ app.config['TESTING'] = True
 app.config['SECRET_KEY'] = '1489e0f4ef38021cff66a4a5d1818c76'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -39,6 +43,32 @@ jwt = JWTManager(app)
 def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return User.query.filter_by(id=identity).one_or_none()
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
+    return token is not None
+
+
+
+@app.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    identity = get_jwt_identity()
+    access_token = create_access_token(identity=identity)
+    return jsonify(access_token=access_token)
+
+@app.route("/logout", methods=["DELETE"])
+@jwt_required()
+def modify_token():
+    jti = get_jwt()["jti"]
+    now = datetime.now(timezone.utc)
+    db.session.add(TokenBlocklist(jti=jti, created_at=now))
+    db.session.commit()
+    return jsonify(msg="JWT revoked")
+	
+
 
 ###tokens decorator 
 
@@ -116,22 +146,27 @@ def login():
 	username = request.json.get("username", None)
 	password = request.json.get("password", None)
 	role = "user"
+
 	if not username or not password:
-		
 		return unauthorized('nodata')
 
 	user = get_user_by_name(username)
+
 	if user is False:
 		return unauthorized('wrong username')
 
 	if user.password == pass_hash(password):
 		access_token = create_access_token(identity=user.id)
-		return jsonify(access_token=access_token, user={"id":user.id})
+		refresh_token = create_refresh_token(identity=user.id)
+		return jsonify(access_token=access_token, refresh_token=refresh_token, user={"id":user.id})
+
 	print(user.password)
 	print(pass_hash(password))
 	return unauthorized('no matching password')
 	
-
+######
+#logout is at JWT code just accept it
+######
 
 
 
@@ -193,6 +228,19 @@ def get_user():
 				}
 			}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 ###401
 
 def unauthorized(wy):
@@ -213,6 +261,20 @@ def handle_exception(e):
     })
     response.content_type = "application/json"
     return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ######ddb code
 ### ddb functions
@@ -252,6 +314,7 @@ share = db.Table(
 				)
 
 ###ddb classes
+###app
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(80), unique=True, nullable=False)
@@ -276,7 +339,11 @@ class File(db.Model):
 	def __repr__(self):
 		return '<File %r>' % self.url
 
-
+###JWT
+class TokenBlocklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
 
 if __name__ == "__main__":
 	app.run(debug=True)
