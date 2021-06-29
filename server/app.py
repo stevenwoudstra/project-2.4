@@ -18,7 +18,7 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from sqlalchemy.orm import backref
 
-
+#export FLASK_ENV=development
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -111,6 +111,7 @@ def create_user():
 
 ###login
 @app.route('/user/login', methods=['POST'])
+@cross_origin()
 def login():
 	username = request.json.get("username", None)
 	password = request.json.get("password", None)
@@ -136,11 +137,13 @@ def login():
 
 ###data
 @app.route('/user/all', methods=['GET'])
+@cross_origin()
 @jwt_required() 
 def get_users():
 	return {'message': 'TEST OK'}
 
 @app.route("/user/profile", methods=['GET'])
+@cross_origin()
 @jwt_required()
 def get_user_profile():
 	user = current_user
@@ -150,10 +153,30 @@ def get_user_profile():
 			"first_name": user.first_name,
 			"last_name": user.last_name,
 			"bio": user.bio,
-			"profile_picture": user.profile_picture
+			"profile_picture": user.profile_picture,
+			"email":user.email
 			}
 
+@app.route("/user/profile/update", methods=['POST'])
+@cross_origin()
+@jwt_required()
+def update_user_profile():
+	user = current_user
+	if not user:
+		return make_response('faild to find user', 404)
+	email = request.json.get("email", None)
+	first_name = request.json.get("first_name", None)
+	last_name = request.json.get("last_name", None)
+	user.email = email
+	user.first_name = first_name
+	user.last_name = last_name
+	db.session.commit()
+	return {'message': 'success'}
+	
+	
+
 @app.route("/user/info", methods=['GET'])
+@cross_origin()
 @jwt_required()
 def get_user():
 	user = current_user

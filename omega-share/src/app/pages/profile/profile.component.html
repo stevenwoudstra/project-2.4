@@ -14,9 +14,9 @@
                             (click)="editBtn()">Edit profile</button>
                     </div>
                     <div class="mb-5 text-white">
-                        <h4 class="mt-0 mb-0">{{ username }}</h4>
+                        <h4 class="mt-0 mb-0">{{ user.username }}</h4>
                         <p class="small mb-4"> <i class="fas fa-map-marker-alt me-2"></i>
-                            {{ firstName + " " + lastName }}
+                            {{ user.firstName + " " + user.lastName }}
                         </p>
                     </div>
                 </div>
@@ -33,26 +33,32 @@
                     </li>
                 </ul>
             </div>
+<!-- #######################form################################### -->
             <div class="row" id="edit-field">
-                <form class="col-md-6">
+                <form class="col-md-6" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
                     <h3 class="ps-2">Change details</h3>
                     <div class="row g-0">
-                        <div class="col-md-6 ps-2 pe-2">
+                        <div class="col-md-6 ps-2 pe-2 form-group">
                             <label>First name</label>
-                            <input type="text" class="form-control" placeholder="first name" value="{{ firstName }}">
+                            <input type="text" class="form-control" placeholder="first name" 
+                            name="firstName" [(ngModel)]="user.firstName" #fitstName="ngModel">
                         </div>
-                        <div class="col-md-6 ps-2 pe-2">
+                        <div class="col-md-6 ps-2 pe-2 form-group">
                             <label>Last name</label>
-                            <input type="text" class="form-control" value="{{ lastName }}" placeholder="last name">
+                            <input type="text" class="form-control"  placeholder="last name"
+                            name="lastName" [(ngModel)]="user.lastName" #lastName="ngModel">
                         </div>
                     </div>
                     <div class="row g-0">
-                        <div class="ps-2 pe-2">
+                        <div class="ps-2 pe-2 form-group">
                             <label>Email address</label>
-                            <input type="email" class="form-control" placeholder="enter email" value="{{ email }}">
+                            <input type="email" class="form-control" placeholder="enter email"
+                            [(ngModel)]="user.email" name="email" #email="ngModel">
                         </div>
                     </div>
-                    <button class="confirm-button btn btn-lg btn-primary ms-2 mt-3 pt-0" type="submit">save</button>
+                    <div class="form-group">
+                        <button class="confirm-button btn btn-lg btn-primary ms-2 mt-3 pt-0" type="submit">save</button>
+                    </div>
                 </form>
                 <form class="col-md-6 border-start">
                     <h3 class="ps-2">change password</h3>
@@ -71,10 +77,11 @@
                     <button class="confirm-button btn btn-lg btn-primary ms-2 mt-3 pt-0" type="submit">reset password</button>
                 </form>
             </div>
+<!-- #########################end form######################################## -->
             <div class="px-4 py-3">
                 <h5 class="mb-0">About</h5>
                 <div class="p-4 rounded shadow-sm bg-light">
-                    <p class="font-italic mb-0">{{ about }}</p>
+                    <p class="font-italic mb-0">{{ user.about }}</p>
                 </div>
             </div>
             <div class="py-4 px-4">
