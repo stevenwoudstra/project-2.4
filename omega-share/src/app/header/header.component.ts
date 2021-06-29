@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { DataSharingService } from '../_services/data-sharing.service';
 import { TokenStorageService } from './../_services/token-storage.service';
@@ -14,7 +15,11 @@ export class HeaderComponent implements OnInit {
   username: any;
   profilePicture: string = "assets/placeholder pictures/stock_profile_picture.png";
 
-  constructor(private tokenStorageService: TokenStorageService, private dataSharingService: DataSharingService) { }
+  constructor(private tokenStorageService: TokenStorageService, private dataSharingService: DataSharingService, private router: Router) {
+    router.events.subscribe((val) => {
+      this.closeMobileNavbar();
+  });
+  }
   
   ngOnInit(): void {
     
@@ -22,19 +27,32 @@ export class HeaderComponent implements OnInit {
           this.isLoggedIn = value;
           const user = this.tokenStorageService.getUser();
           this.username = user.username;
-
         });
     // this.isLoggedIn = !!this.tokenStorageService.getToken();
-  }
 
-  navbarClick() {
-    if (window.matchMedia("(max-width: 575px)").matches) {
+    document.body.addEventListener('click', event => {
+      if(!event.composedPath().includes(document.getElementById("app-header")!)) {
+        this.closeMobileNavbar();
+      }
+    });
+    document.body.addEventListener('touchstart', event => {
+      if(!event.composedPath().includes(document.getElementById("app-header")!)) {
+        this.closeMobileNavbar();
+      }
+    });
+
+  }
+  
+  closeMobileNavbar(): void {
+    if(document.getElementById("collapse_target")?.classList.contains("show")) {
       document.getElementById("navbar-btn")?.click();
     }
   }
+  
+
   logout(): void {
     this.tokenStorageService.signOut();
-    window.location.reload();
+    this.dataSharingService.isUserLoggedIn.next(false);
   }
 
 }

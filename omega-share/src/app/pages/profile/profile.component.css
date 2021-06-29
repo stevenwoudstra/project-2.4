@@ -21,6 +21,11 @@
     }
   }
 
+.profile-page {
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
 .profile-head {
     transform: translateY(5rem)
 }
@@ -126,13 +131,19 @@
     width: 100%;
     max-height: 0;
     padding-bottom: 3px;
-    transition: max-height 0.75s ease-in-out;
+    transition: max-height 0.5s ease-in-out;
     overflow-y: hidden;
     margin: 0;
 }
 
 #edit-field.enabled {
-    max-height: 100rem;
+    max-height: 18rem;
+}
+
+@media screen and (max-width: 768px) {
+    #edit-field.enabled {
+        max-height: 36rem;
+    }
 }
 
 .form-control:focus {
