@@ -22,16 +22,19 @@ export class HeaderComponent implements OnInit {
           this.isLoggedIn = value;
           const user = this.tokenStorageService.getUser();
           this.username = user.username;
-
         });
     // this.isLoggedIn = !!this.tokenStorageService.getToken();
+
+    document.body.addEventListener('click', this.closeMobileNavbar);
+    document.body.addEventListener('touchstart', this.closeMobileNavbar);
   }
 
-  navbarClick() {
-    if (window.matchMedia("(max-width: 575px)").matches) {
+  closeMobileNavbar(): any {
+    if(document.getElementById("collapse_target")?.classList.contains("show")) {
       document.getElementById("navbar-btn")?.click();
     }
   }
+
   logout(): void {
     this.tokenStorageService.signOut();
     window.location.reload();

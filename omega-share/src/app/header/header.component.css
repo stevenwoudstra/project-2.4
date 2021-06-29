@@ -21,11 +21,102 @@ a.navbar-brand, a.nav-link {
     
 }
 
-.tr-profile > img {
-    background-color: white;
-    border-radius: 50%;
+.btn-secondary {
+    background-color: transparent;
+    border: none;
 }
 
-.tr-profile {
+.btn-secondary:focus {
+    box-shadow: none;
+}
+
+.dropdown-menu {
+    right: -20px;
+    left: auto;
+    display: block;
+    background-color: #212529;
+    transition: transform .25s;
+    transform-origin: 80% 5%;
+    transform: scale(0%);
+}
+
+.dropdown-menu.show {
+    transform: scale(100%);
+}
+
+.dropdown-item {
     color: white;
+    cursor: pointer;
+    background-color: #212529;
+    background-image: linear-gradient(90deg, #212529 0%, #212529 25%, rgba(255,192,74,0.3) 75%, rgba(255,99,71,0.3) 100%);
+    background-size: 300%;
+    background-position: left;
+    transition: 0.75s;
+}
+
+.dropdown-item:hover {
+    background-size: 150%;
+    background-position: right;
+}
+
+.dropdown-item > img, button > img {
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0px 0px 0px 2px black;
+    display: inline-flex;    
+}
+
+.dropdown-item > p {
+    padding: 0.5rem;
+    margin: 0 40px 0 0;
+}
+
+.dropdown-toggle.show::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-toggle::after {
+    transform: rotate(0deg);
+    transition: transform .25s ease-in-out;
+}
+
+.dropdown-toggle {
+    color:rgba(255,255,255,.55);
+}
+
+.dropdown-toggle:hover, .dropdown-toggle.show {
+    color:#ffffffdd;
+}
+
+@media screen and (max-width: 768px) {
+    .dropdown {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .mobile {
+        display: none;
+    }
+}
+
+.dropdown-mobile {
+    visibility: hidden;
+    display: none;
+}
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+    .dropdown-mobile {
+        visibility: visible;
+        display: block;
+    }
+}
+
+li > a > svg > path {
+    transition: fill .15s ease-in-out;
+    fill: rgba(255,255,255,.55);
+}
+
+li:hover > a > svg > path, li.active > a > svg > path {
+    fill: #ffffffdd;
 }
