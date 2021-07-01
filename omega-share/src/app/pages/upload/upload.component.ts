@@ -99,6 +99,7 @@ export class UploadComponent implements OnInit {
   addToUsers(user: string): void {
     this.addedUsers.unshift(user);
     let newElement: HTMLElement = <HTMLElement>document.getElementById("added-user-template")?.firstElementChild?.cloneNode(true);
+    // newElement.innerHTML = (user.length > 16 ? user.substring(0, 16) + "..." : user) + newElement.innerHTML;
     newElement.innerHTML = user + newElement.innerHTML;
     newElement.id = user;
     newElement.getElementsByTagName("svg")[0].addEventListener("click", e => {
@@ -121,7 +122,6 @@ export class UploadComponent implements OnInit {
   }
 
   removeUser(event: Event) {
-    // AFMAKEN
     event.composedPath().forEach(e => { if ((<HTMLElement>e).classList && (<HTMLElement>e).classList.contains("addedUser")) this.userToRemove = (<HTMLElement>e).id })
     this.addedUsers.splice(this.addedUsers.indexOf(this.userToRemove), 1);
     document.getElementById(this.userToRemove)!.classList.add("vanishing");

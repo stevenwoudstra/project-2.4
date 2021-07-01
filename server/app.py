@@ -428,6 +428,6 @@ if __name__ == "__main__":
 
 
 # def code for testing in shell
-file = File.query.one_or_none()
-user = User.query.one_or_none()
+# file = File.query.one_or_none()
+# user = User.query.one_or_none()
 ################################
