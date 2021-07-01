@@ -5,14 +5,15 @@ from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 #import jwt
 import uuid
-from datetime import timedelta, timezone, datetime
+from datetime import date, timedelta, timezone, datetime
 from functools import wraps
 import hashlib
 from flask_cors import CORS, cross_origin
 import os
+from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
-import json
+import json, time
 
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_jwt_extended import current_user
@@ -38,7 +39,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
 app.config['UPLOAD_FOLDER'] = './Files'
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx', 'png'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx'}
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -58,8 +59,10 @@ def check_if_token_revoked(jwt_header, jwt_payload):
 
 ### file code
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+	print('.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
+	return ('.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
 
 def save_file_to_ddb(user, url, type):
 
@@ -76,16 +79,22 @@ def save_file_to_ddb(user, url, type):
 
 def get_file_by_id(id):
 	return File.query.filter_by(id=id).first()
-	
-# def split_file_data(file):
-# 	full_path = file.url
-# 	url_list = full_path.split("/")
-# 	name = url_list.pop()
-# 	path = ' '.join(url_list)
-	
-# 	return {"name": name, "path": path, "full_path": full_path}
+
+def create_file_name(filename):
+	file_type = filename.rsplit('.', 1)[1]
+	return str(time.time()).replace('.', '') + '.' + file_type 
 
 
+def get_file_users(form):
+	users = dict(form).get('users').split(",")
+	user_list = []
+	for u in users:
+		print(u)
+		if get_user_by_name(u):
+			user_list.append(get_user_by_name(u))
+
+	return user_list
+	
 
 ### jwt routes
 
@@ -108,48 +117,6 @@ def modify_token():
     db.session.commit()
     return jsonify(msg="JWT revoked")
 	
-
-
-###tokens decorator 
-
-# def require_token(f):
-
-# 	@wraps(f)
-# 	def decorator(*args, **kwargs):
-# 		token = None
-# 		header = 'x-access-tokens'
-
-# 		if header in request.headers:
-# 			token = request.headers[header]
-		
-# 		if not token:
-# 			return {'message': 'no valid token found'}
-
-# 		#try:
-# 		print("decodeing")
-# 		data = jwt.decode(token, app.config['SECRET_KEY'],algorithms=["HS256"], verify_exp=True)
-# 		user = User.query.filter_by(id=data['id']).first()
-# 		# except:
-# 		# 	e = sys.exc_info()[0]
-# 		# 	print(e)
-# 		# 	return {'message': 'invalid'}
-
-# 		return f(user, *args, **kwargs)
-# 	return decorator
-	
-###create token
-
-# def create_token(user_id):
-
-# 	token = jwt.encode(
-# 		{
-# 			'user_id': user_id,
-# 			'exp': datetime.datetime.now() + datetime.timedelta(minutes=3)
-# 		},
-# 		app.config['SECRET_KEY'], 
-# 		"HS256"
-# 	)
-# 	return token
 
 
 ######hashing
@@ -219,22 +186,52 @@ def upload_profile_picture():
 		return {'error':'no file'}
 
 	file = request.files['file']
-	# if  allowed_file(file.filename):
-	# 	return {'error':'wrong file type'}
+	print(file.filename)
+	if not allowed_file(file.filename):
+		return {'error':'wrong file type'}
 
-	file_name = secure_filename(file.filename)
+	file_name = create_file_name(secure_filename(file.filename))
 	file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(current_user.id))
 	full_path = os.path.join(file_path, file_name)
+
 	if os.path.exists(file_path) is False:
 		os.mkdir(file_path)
-	print(file_path)
+
+	# print(file_path)
 	file.save(full_path)
+	# print(request.__dir__())
 	
 	profile_pic = save_file_to_ddb(user = current_user, url=full_path, type="ProfilePic")
 	current_user.profile_picture = profile_pic.id
 	db.session.commit()
 	return {"message":"oke", "picture_id": profile_pic.id}
 
+@app.route('/file/upload', methods=['POST'])
+@cross_origin()
+@jwt_required()
+def upload_file():
+	if 'file' not in request.files:
+		return {'error':'no file'}
+
+	file = request.files['file']
+	if not allowed_file(file.filename):
+		return {'error':'wrong file type'}
+
+	# print(request.json)
+	file_name = create_file_name(secure_filename(file.filename))
+	file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(current_user.id))
+	full_path = os.path.join(file_path, file_name)
+	if os.path.exists(file_path) is False:
+		os.mkdir(file_path)
+	
+	file.save(full_path)
+	
+	saved_file = save_file_to_ddb(user = current_user, url=full_path, type="file")
+	user_list = get_file_users(dict(request.form))
+	for user in user_list:
+		user.files.append(saved_file)
+	db.session.commit()
+	return {"message":"oke", "picture_id": saved_file.id}
 
 
 ###data
@@ -307,7 +304,7 @@ def get_profile_picture():
 	user = current_user
 	file = get_file_by_id(current_user.profile_picture)
 	file_info = file.meta_data()
-	
+	print(file_info)
 	return send_from_directory(	
 								file_info['path'], 
 								filename = file_info['name'], 
@@ -428,6 +425,6 @@ if __name__ == "__main__":
 
 
 # def code for testing in shell
-file = File.query.one_or_none()
-user = User.query.one_or_none()
+# file = File.query.one_or_none()
+# user = User.query.one_or_none()
 ################################

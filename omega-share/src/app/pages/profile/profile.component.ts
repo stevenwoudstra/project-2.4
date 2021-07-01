@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
         this.user.lastName = data.last_name;
         this.user.about = data.bio;
         console.log(data.profile_picture);
-        if(data.profile_picture == 1) {
+        if(data.profile_picture =! null) {
           this.getImageFromService();
           console.log("kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
         } else{ 

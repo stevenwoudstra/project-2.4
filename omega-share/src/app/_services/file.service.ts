@@ -21,5 +21,16 @@ export class FileService {
 
     return this.http.post(API_URL + 'file/upload/profile', data)
   }
+
+  postFile(file: any, users?: any): Observable<any> {
+    const data = new FormData();
+    data.append('file', file)
+    if (users) {
+      data.append('users', users)
+    }
+    
+
+    return this.http.post(API_URL + 'file/upload', data)
+  }
   
 }

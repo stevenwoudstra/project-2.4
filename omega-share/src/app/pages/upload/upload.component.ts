@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { GlobalConstants } from 'src/app/global-constants';
+import { FileService } from 'src/app/_services/file.service';
 
 @Component({
   selector: 'app-upload',
@@ -19,7 +20,7 @@ export class UploadComponent implements OnInit {
 
   maxView: number = 3;
 
-  constructor(private http: HttpClient) { }
+  constructor(private fileService: FileService) { }
 
   ngOnInit(): void {
   }
@@ -63,7 +64,19 @@ export class UploadComponent implements OnInit {
     //     this.url = event.target.result;
     //   }
     // }
+    this.selectedFile = event.target.files[0];
+  }
 
+  uploadFile(){
+    if (this.selectedFile != null){
+      this.fileService.postFile(this.selectedFile, this.addedUsers).subscribe(
+        data => {
+          
+      }, error => {
+
+        console.log(error);
+      });
+    }
   }
 
   addUser(event: KeyboardEvent): void {
