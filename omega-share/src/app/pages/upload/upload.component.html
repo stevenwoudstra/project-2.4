@@ -4,7 +4,7 @@
         <h1 class="pc">Drop file to select</h1>
         <h1 class="mobile">tap box to select file</h1>
     </div>
-    
+
     <div class="dropzone">
         <div class="fileAppear" id="preview-icon">
             <img src="" alt="">
@@ -13,9 +13,41 @@
         <img src="assets/icons/upload.svg" id="upload-icon">
         <input type="file" class="upload-input" (change)="onFileSelected($event)">
     </div>
-
+    <div>
+        <p class="mb-1">Share file with:</p>
+        <div style="position: relative;">
+            <div id="add-user-error" class="alert-danger" role="alert" style="padding-left: 0.2rem; display: none;">
+                
+            </div>
+            <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.395 45.395">
+                <path
+                    d="M22.683,16.977c-2.028,0-3.465,1.646-3.465,3.672v12.485c0,2.028,1.437,3.671,3.465,3.671c2.027,0,3.463-1.643,3.463-3.671V20.649C26.146,18.621,24.71,16.977,22.683,16.977z" />
+                <path
+                    d="M22.698,7.432c-2.095,0-3.795,1.699-3.795,3.795c0,2.095,1.7,3.793,3.795,3.793c2.093,0,3.793-1.698,3.793-3.793C26.491,9.131,24.791,7.432,22.698,7.432z" />
+                <path
+                    d="M22.698,0C10.181,0,0,10.183,0,22.697c0,12.516,10.182,22.697,22.698,22.697c12.516,0,22.696-10.183,22.696-22.697S35.214,0,22.698,0z M22.698,40.447c-9.787,0-17.749-7.963-17.749-17.75c0-9.787,7.962-17.749,17.749-17.749c9.786,0,17.747,7.962,17.747,17.749C40.445,32.484,32.484,40.447,22.698,40.447z" />
+            </svg>
+            <div class="info-box">
+                <p style="margin: 0;">Fill in username or email of the person you want to share the file with. Press
+                    "Enter" to confirm and add the user to the list.</p>
+            </div>
+            <input id="user-selector" class="form-control" placeholder="username/email" name="username or email" (keydown)="addUser($event)">
+        </div>
+        <div id="added-users"></div>
+        <p id="and-more"><i>and {{ addedUsers.length - maxView }} more...</i></p>
+        <p id="show-more-less" class="less" (click)="toggleShowMore()"></p>
+    </div>
     <button type="button" class="btn" name="uploadbutton">Upload file</button>
-
+    
 </div>
 
 <!-- original pen: https://codepen.io/roydigerhund/pen/ZQdbeN  -->
+
+<template id="added-user-template">
+    <p id="" class="addedUser">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 365.696 365.696" width="12px">
+            <path
+                d="m243.1875 182.859375 113.132812-113.132813c12.5-12.5 12.5-32.765624 0-45.246093l-15.082031-15.082031c-12.503906-12.503907-32.769531-12.503907-45.25 0l-113.128906 113.128906-113.132813-113.152344c-12.5-12.5-32.765624-12.5-45.246093 0l-15.105469 15.082031c-12.5 12.503907-12.5 32.769531 0 45.25l113.152344 113.152344-113.128906 113.128906c-12.503907 12.503907-12.503907 32.769531 0 45.25l15.082031 15.082031c12.5 12.5 32.765625 12.5 45.246093 0l113.132813-113.132812 113.128906 113.132812c12.503907 12.5 32.769531 12.5 45.25 0l15.082031-15.082031c12.5-12.503906 12.5-32.769531 0-45.25zm0 0" />
+        </svg>
+    </p>
+</template>
