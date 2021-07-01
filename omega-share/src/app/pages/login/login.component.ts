@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
     console.log("kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
     this.authService.login(username, password).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.access_token);
+        this.tokenStorage.saveToken(data.access_token, data.refresh_token);
         console.log(data.access_token);
         this.id= data.user.id
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
         this.getData();
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.Authentication;
         this.isLoginFailed = true;
       }
     );
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/profile']);
       },
       err => {
-        this.errorMessage = err.error.message;
+        // this.errorMessage = err.error.message;
         this.isLoginFailed = true;
         this.tokenStorage.signOut()
         // this.reloadPage();

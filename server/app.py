@@ -1,5 +1,6 @@
 from enum import unique
-from flask import Flask, request, jsonify, make_response
+from sys import path
+from flask import Flask, request, jsonify, make_response, send_file, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 #import jwt
@@ -8,8 +9,9 @@ from datetime import timedelta, timezone, datetime
 from functools import wraps
 import hashlib
 from flask_cors import CORS, cross_origin
-import sys
+import os
 from werkzeug.exceptions import HTTPException
+from werkzeug.utils import secure_filename
 import json
 
 from flask_jwt_extended import create_access_token, create_refresh_token
@@ -18,7 +20,7 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended import get_jwt_identity
-from sqlalchemy.orm import backref
+
 
 #export FLASK_ENV=development
 app = Flask(__name__)
@@ -32,7 +34,11 @@ app.config['SECRET_KEY'] = '1489e0f4ef38021cff66a4a5d1818c76'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+#app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
+app.config['UPLOAD_FOLDER'] = './Files'
+
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx', 'png'}
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -50,16 +56,50 @@ def check_if_token_revoked(jwt_header, jwt_payload):
     token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
     return token is not None
 
+### file code
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def save_file_to_ddb(user, url, type):
+
+	file = File(
+				url = url,
+				user_id = user.id,
+				type=type
+				)
+	
+	db.session.add(file)
+	user.files.append(file)
+	db.session.commit()
+	return file
+
+def get_file_by_id(id):
+	return File.query.filter_by(id=id).first()
+	
+# def split_file_data(file):
+# 	full_path = file.url
+# 	url_list = full_path.split("/")
+# 	name = url_list.pop()
+# 	path = ' '.join(url_list)
+	
+# 	return {"name": name, "path": path, "full_path": full_path}
 
 
-@app.route("/refresh", methods=["POST"])
+
+### jwt routes
+
+@app.route("/user/refresh", methods=["POST"])
+@cross_origin()
 @jwt_required(refresh=True)
 def refresh():
-    identity = get_jwt_identity()
-    access_token = create_access_token(identity=identity)
-    return jsonify(access_token=access_token)
+	identity = get_jwt_identity()
+	access_token = create_access_token(identity=identity)
+	refresh_token = create_refresh_token(identity=identity)
+	return jsonify(access_token=access_token, refresh_token=refresh_token)
 
-@app.route("/logout", methods=["DELETE"])
+@app.route("/user/logout", methods=["DELETE"])
+@cross_origin()
 @jwt_required()
 def modify_token():
     jti = get_jwt()["jti"]
@@ -168,6 +208,33 @@ def login():
 #logout is at JWT code just accept it
 ######
 
+######
+#file upload
+######
+@app.route('/file/upload/profile', methods=['POST'])
+@cross_origin()
+@jwt_required() 
+def upload_profile_picture():
+	if 'file' not in request.files:
+		return {'error':'no file'}
+
+	file = request.files['file']
+	# if  allowed_file(file.filename):
+	# 	return {'error':'wrong file type'}
+
+	file_name = secure_filename(file.filename)
+	file_path = os.path.join(app.config['UPLOAD_FOLDER'], str(current_user.id))
+	full_path = os.path.join(file_path, file_name)
+	if os.path.exists(file_path) is False:
+		os.mkdir(file_path)
+	print(file_path)
+	file.save(full_path)
+	
+	profile_pic = save_file_to_ddb(user = current_user, url=full_path, type="ProfilePic")
+	current_user.profile_picture = profile_pic.id
+	db.session.commit()
+	return {"message":"oke", "picture_id": profile_pic.id}
+
 
 
 ###data
@@ -176,6 +243,7 @@ def login():
 @jwt_required() 
 def get_users():
 	return {'message': 'TEST OK'}
+
 
 @app.route("/user/profile", methods=['GET'])
 @cross_origin()
@@ -216,36 +284,42 @@ def update_user_profile():
 def get_user():
 	user = current_user
 	role = "user"
+	picture_is_set = False
 	if not user:
 		return make_response('faild to find user', 404)
 	if user.admin is True:
 		role = "admin"
+	if user.profile_picture:
+		picture_is_set = True
 	return { "user":{
 				"userid":user.id,
 				"username":user.username,
 				"email":user.email,
-				"role":role
+				"role":role,
+				"picture":picture_is_set
 				}
 			}
 
-
-
-
-
-
-
-
-
-
-
-
+@app.route("/user/profile/picture", methods=['GET'])
+@cross_origin()
+@jwt_required()
+def get_profile_picture():
+	user = current_user
+	file = get_file_by_id(current_user.profile_picture)
+	file_info = file.meta_data()
+	
+	return send_from_directory(	
+								file_info['path'], 
+								filename = file_info['name'], 
+								as_attachment = True,
+								)
 
 
 ###401
 
 def unauthorized(wy):
 	print(wy)
-	return make_response('faild to login', 401, {'Authentication': 'FAILD'})
+	return make_response({'Authentication': wy}, 401)
 
 ####### general http error logging
 @app.errorhandler(HTTPException)
@@ -261,17 +335,6 @@ def handle_exception(e):
     })
     response.content_type = "application/json"
     return response
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -299,17 +362,19 @@ def get_user_by_id(id):
 
 
 ###ddb tabels
-share = db.Table( 
+shares = db.Table( 
 				'shares',
 				db.Column(
 						'user_id',
 						db.Integer,
 						db.ForeignKey('user.id', ondelete="cascade"),
+						primary_key=True
 				),
 				db.Column(
 						'file_id',
 						db.Integer,
 						db.ForeignKey('file.id', ondelete="cascade"),
+						primary_key=True
 				),
 				)
 
@@ -323,9 +388,12 @@ class User(db.Model):
 	first_name = db.Column(db.String(64))
 	last_name = db.Column(db.String(64))
 	bio = db.Column(db.String(256))
-	profile_picture = db.Column(db.String(64))
+	profile_picture = db.Column(db.Integer, db.ForeignKey('file.id'))
 	admin = db.Column(db.Boolean, default=False)
-	files = db.relationship('File',secondary=share , backref=db.backref('users', lazy=True))
+	files = db.relationship('File',
+							secondary=shares,
+							backref=db.backref('users', lazy=True)
+							)
 
 	def __repr__(self):
 		return '<User %r>' % self.username
@@ -339,6 +407,14 @@ class File(db.Model):
 	def __repr__(self):
 		return '<File %r>' % self.url
 
+	def meta_data(self):
+		url_list = self.url.split("/")
+		name = url_list.pop()
+		path = '/'.join(url_list)
+	
+		return {"name": name, "path": path, "full_path": self.url}
+
+
 ###JWT
 class TokenBlocklist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -347,3 +423,11 @@ class TokenBlocklist(db.Model):
 
 if __name__ == "__main__":
 	app.run(debug=True)
+
+
+
+
+# def code for testing in shell
+file = File.query.one_or_none()
+user = User.query.one_or_none()
+################################

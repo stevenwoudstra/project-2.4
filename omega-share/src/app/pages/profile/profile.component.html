@@ -4,12 +4,25 @@
             <div class="px-4 pb-4 cover" id="banner">
                 <div class="d-flex align-items-end profile-head">
                     <div class="me-3">
+<!-- #######################profile picture -->
+
                         <div id="dropzone" class="dropzone img-thumbnail">
                             <img src="assets/icons/camera.svg" class="upload-icon" style="color: blue"/>
-                            <input type="file" class="upload-input">
+                            <input type="file" class="upload-input" (change)="onFileSelected($event)">
                         </div>
-                        <img style="display: block;" src="{{ profilePicture }}" alt="..." width="130"
-                            class="mb-2 img-thumbnail">
+
+                        <img [src]="profilePicture"
+                        alt="profilePicture"
+                        *ngIf="!isImageLoading; else noImageFound"
+                        style="display: block;"
+                        width="130"
+                        class="mb-2 img-thumbnail">
+                        <ng-template #noImageFound>
+                            <img style="display: block;" src="{{ profilePictureBack }}" alt="..." width="130"
+                             class="mb-2 img-thumbnail">
+                        </ng-template>
+<!-- ################################### -->
+
                         <button id="edit-profile-btn" class="edit-profile-btn btn btn-sm" type="button"
                             (click)="editBtn()">Edit profile</button>
                     </div>

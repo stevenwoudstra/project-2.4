@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { LoginComponent } from '../pages/login/login.component';
-import { RegisterComponent } from '../pages/register/register.component';
 
 const AUTH_API = 'http://localhost:5000/user/';
 
@@ -36,6 +34,16 @@ export class AuthService {
       email,
       password
     }, httpOptions);
+  }
+
+  tokenRefresh(): Observable<any> {
+    return this.http.post(AUTH_API + 'refresh', {
+    });
+  }
+
+  logout(): Observable<any>  {
+    return this.http.delete(AUTH_API + 'logout', {
+    });
   }
 
   canUserAccess(route: ActivatedRouteSnapshot) {

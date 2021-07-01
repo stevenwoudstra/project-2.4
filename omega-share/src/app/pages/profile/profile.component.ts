@@ -4,6 +4,7 @@ import { UserService } from '../../_services/user.service';
 import { User } from '../../user'
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
+import { FileService } from 'src/app/_services/file.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +13,10 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class ProfileComponent implements OnInit {
 
-  profilePicture: string = "assets/placeholder pictures/stock_profile_picture.png";
+  profilePicture: any;
+  profilePictureBack: string = "assets/placeholder pictures/stock_profile_picture.png";
+  isImageLoading: boolean = true;
+
   amountOfPosts: number = 12;
   likes: number = 0;
   banner: string = "assets/placeholder pictures/stock banner.jpg";
@@ -22,7 +26,7 @@ export class ProfileComponent implements OnInit {
   user: any;
 
   errorMessage: any;
-  constructor(private userService: UserService, private token: TokenStorageService, private authService: AuthService, private router: Router) { }
+  constructor(private userService: UserService, private token: TokenStorageService, private authService: AuthService, private router: Router, private fileService: FileService) { }
 
   ngOnInit(): void {
     const userToken = this.token.getUser();
@@ -40,6 +44,13 @@ export class ProfileComponent implements OnInit {
         this.user.firstName = data.first_name;
         this.user.lastName = data.last_name;
         this.user.about = data.bio;
+        console.log(data.profile_picture);
+        if(data.profile_picture == 1) {
+          this.getImageFromService();
+          console.log("kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
+        } else{ 
+          this.isImageLoading = false
+        }
       },
       err => {
         this.errorMessage = err.error.message;
@@ -80,4 +91,39 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  onFileSelected(event: any): void {
+    console.log(event)
+    const file = event.target.files[0];
+    if (file != null){
+      this.fileService.postProfilePicture(file).subscribe(
+        data => {
+          this.getImageFromService()
+        },
+        err => {
+        }
+      );
+    }
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+       this.profilePicture = reader.result;
+    }, false);
+ 
+    if (image) {
+       reader.readAsDataURL(image);
+    }
+   }
+
+   getImageFromService() {
+    this.isImageLoading = true;
+    this.userService.getProfilePicture().subscribe(data => {
+      this.createImageFromBlob(data);
+      this.isImageLoading = false;
+    }, error => {
+      this.isImageLoading = false;
+      console.log(error);
+    });
+}
 }

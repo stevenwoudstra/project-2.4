@@ -19,6 +19,11 @@ export class UserService {
     return this.http.get(API_URL + 'profile', { responseType: 'json' });
   }
 
+  getProfilePicture(): Observable<any> {
+
+    return this.http.get(API_URL + 'profile/picture', { responseType: 'blob' });
+  }
+
   getAdminPage(): Observable<any> {
     return this.http.get(API_URL + 'admin', { responseType: 'text' });
   }
