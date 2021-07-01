@@ -110,6 +110,12 @@ a.navbar-brand, a.nav-link {
         visibility: visible;
         display: block;
     }
+    .navbar-brand {
+        display: block;
+        max-width: 50px !important;
+        overflow: hidden;
+        padding: 0;
+    }
 }
 
 li > a > svg > path {

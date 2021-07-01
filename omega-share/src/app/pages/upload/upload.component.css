@@ -159,6 +159,7 @@ h1 {
 
 .addedUser {
 	background-color: rgba(144, 238, 144, 0.336);
+	position: relative;
 	width: 95%;
 	padding-left: 4px;
 	margin: 4px 0 0 2.5%;
@@ -166,6 +167,11 @@ h1 {
 	box-shadow: 0 0 0 1px rgb(144, 238, 144);
 	max-height: 1.75rem;
 	overflow: hidden;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-right: 20px;
+	max-width: 13rem;
 	transition: max-height 0.2s ease-in-out, margin 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -180,6 +186,9 @@ h1 {
 	float: right;
 	margin: 6px;
 	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .addedUser > svg:hover {
