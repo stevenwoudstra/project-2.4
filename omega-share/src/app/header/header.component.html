@@ -26,6 +26,9 @@
                 <li *ngIf="isLoggedIn;" class="mobile nav-item" [routerLinkActive]="['active']">
                     <a class="nav-link" [routerLink]="['/profile']">{{ username }}</a>
                 </li>
+                <li *ngIf="isLoggedIn;" class="mobile nav-item" [routerLinkActive]="['upload']">
+                    <a class="nav-link" [routerLink]="['/upload']">Upload</a>
+                </li>
                 <li *ngIf="isLoggedIn;" class="mobile nav-item">
                     <a class="nav-link" (click)="logout()">Logout</a>
                 </li>
@@ -61,6 +64,7 @@
                         <p>view profile</p>
                     </div>
                 </li>
+                <li><a class="dropdown-item" style="text-align: right;" [routerLink]="['/upload']">Upload</a></li>
                 <li><a class="dropdown-item" style="text-align: right;" (click)="logout()">Logout</a></li>
             </ul>
         </div>
@@ -73,6 +77,11 @@
                 <li>
                     <div class="dropdown-item" [routerLink]="['/profile']">
                         <p>{{ username }}</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown-item" [routerLink]="['/upload']">
+                        <p>Upload</p>
                     </div>
                 </li>
                 <li>

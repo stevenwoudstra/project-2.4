@@ -8,6 +8,10 @@
     to { transform: scale(1); }
 }
 
+.pc, .mobile, .dropzone, .btn{
+	margin: 0.75rem auto 0.75rem auto;
+}
+
 .fileAppear {
 	animation: 0.15s ease-in-out 0s fileAppear;
 }
@@ -17,12 +21,9 @@
 }
 
 .center {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	margin: 15vh auto 10vh auto;
 	width: 300px;
-	height: 260px;
+	height: auto;
 	border-radius: 3px;
 	box-shadow: 8px 10px 15px 0 rgba(0, 0, 0, 0.2);
 	background: #efefef;
@@ -30,11 +31,12 @@
 	align-items: center;
 	justify-content: space-evenly;
 	flex-direction: column;
+	transition: height 1s ease-in-out;
 }
 
 .title {
 	width: 100%;
-	height: 40px;
+	height: 50px;
 	border-bottom: 1px solid #999;
 	text-align: center;
 }
@@ -72,16 +74,16 @@ h1 {
 }
 
 #upload-icon {
-	margin: 34px 2px 2px 2px;
+	position: absolute;
+	margin: 34.5px 49.5px 34.5px 49.5px;
 }
 
 ::-webkit-file-upload-button { cursor:pointer; }
 
 .upload-input {
-	position: fixed;
-	left: 25%;
-	width: 150px;
-	height: 100px;
+	position: inherit;
+	width: 100%;
+	height: 100%;
 	opacity: 0;
 	cursor: pointer;
 }
@@ -119,4 +121,98 @@ h1 {
 #preview-icon > img {
 	padding-top: 5px;
 	height: 65px;
+}
+
+.form-control:focus {
+    box-shadow: 0px 0px 5px rgba(255,128,71,1);
+    border-color: rgba(255,128,71,1);
+}
+
+.info-icon {
+	position: absolute;
+	fill: rgba(128, 128, 128, 0.5);
+	right: 0;
+	margin: 9px;
+	width: 1.3rem;
+	height: 1.3rem;
+}
+
+.info-icon:hover {
+	fill: rgba(128, 128, 128, 0.75);
+}
+
+.info-box {
+	visibility: hidden;
+	position: absolute;
+	background-color: white;
+	font-size: 0.85rem;
+	right: 0;
+	bottom: 36px;
+	padding: 10px;
+	border-radius: 0.25rem;
+	border: 1px solid #ced4da;
+}
+
+.info-icon:hover + .info-box {
+	visibility: visible;
+}
+
+.addedUser {
+	background-color: rgba(144, 238, 144, 0.336);
+	width: 95%;
+	padding-left: 4px;
+	margin: 4px 0 0 2.5%;
+	border-radius: 2px;
+	box-shadow: 0 0 0 1px rgb(144, 238, 144);
+	max-height: 1.75rem;
+	overflow: hidden;
+	transition: max-height 0.2s ease-in-out, margin 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.addedUser.hide {
+	margin: 0px 0px 0px 2.5%;
+	max-height: 0;
+	box-shadow: 0 0 0 1px rgba(144, 238, 144, 0);
+}
+
+.addedUser > svg {
+	fill: gray;
+	float: right;
+	margin: 6px;
+	cursor: pointer;
+}
+
+.addedUser > svg:hover {
+	fill: rgba(128, 128, 128, 0.7);
+}
+
+.addedUser.vanishing {
+	margin: 0px 0px 0px 2.5%;
+	max-height: 0;
+	box-shadow: 0 0 0 1px rgba(144, 238, 144, 0);
+}
+
+.addedUser.appearing {
+	max-height: 0;
+}
+
+#show-more-less, #and-more {
+	visibility: hidden;
+	max-height: 0;
+	overflow: hidden;
+	float: right;
+	text-align: right;
+	cursor: pointer;
+	margin-bottom: 0;
+	transition: max-height 0.2s ease-in-out;
+}
+
+#and-more {
+	float: left !important;
+	font-size: 0.9rem;
+}
+
+#show-more-less.shown, #and-more.shown {
+	visibility: visible;
+	max-height: 1.75rem;
 }
