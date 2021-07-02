@@ -29,7 +29,7 @@
                     <div class="mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{ user.userName }}</h4>
                         <p class="small mb-4"> <i class="fas fa-map-marker-alt me-2"></i>
-                            {{ user.firstName + " " + user.lastName }}
+                            {{ (user.firstName ? user.firstName : "" ) + " " + (user.lastName ? user.lastName : "" ) }}
                         </p>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                                     <img class="mx-auto" src="assets/icons/file_types/{{ file.type.toUpperCase() }}.svg"
                                         style="width: 40%;" alt="" (click)="downloadFile(file.id, file.name)" />
                                 <!-- </a> -->
-                                <figcaption>{{file.name}}</figcaption>
+                                <figcaption style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{file.name}}</figcaption>
                             </div>
                         </div>
                     </ng-template>
