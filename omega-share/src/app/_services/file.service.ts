@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 
-const API_URL = 'http://localhost:5000/';
+const API_URL = 'http://stevenik.nl:5000/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'multipart/form-data' })
