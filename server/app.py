@@ -455,7 +455,7 @@ class TokenBlocklist(db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run( ssl_context='adhoc')
 	db.create_all()
 
 
