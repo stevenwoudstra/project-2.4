@@ -29,8 +29,14 @@ export class FileService {
       data.append('users', users)
     }
     
-
     return this.http.post(API_URL + 'file/upload', data)
   }
-  
+
+  getFiles(): Observable<any> {
+    return this.http.get(API_URL + 'file/files', { responseType: 'json' })
+  }
+
+  getFile(id: any): Observable<any> {
+    return this.http.get(API_URL + 'file/' + id, { responseType: 'blob' });
+  }
 }

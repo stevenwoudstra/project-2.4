@@ -13,7 +13,7 @@
 
                         <img [src]="profilePicture"
                         alt="profilePicture"
-                        *ngIf="!isImageLoading; else noImageFound"
+                        *ngIf="!isImageLoading && profilePicture; else noImageFound"
                         style="display: block;"
                         width="130"
                         class="mb-2 img-thumbnail">
@@ -102,90 +102,17 @@
                     <h5 class="mb-0">Recent posts</h5><a href="#" class="btn btn-link text-muted">Show all</a>
                 </div>
                 <div class="row">
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
+                    <ng-template ngFor let-file [ngForOf]="files" let-i="index">
+                        <div class="file col-lg-2 col-sm-4 col-6">
+                            <div class="text-center">
+                                <!-- <a [href]="download.url" [download]="download.filename"> -->
+                                    <img class="mx-auto" src="assets/icons/file_types/{{ file.type.toUpperCase() }}.svg"
+                                        style="width: 40%;" alt="" (click)="downloadFile(file.id, file.name)" />
+                                <!-- </a> -->
+                                <figcaption>{{file.name}}</figcaption>
+                            </div>
                         </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
-                    <div class="file col-lg-2 col-sm-4 col-6">
-                        <div class="text-center">
-                            <img class="mx-auto" src="assets/icons/file_types/{{ getRandomType() }}.svg"
-                                style="width: 40%;" alt="" />
-                            <figcaption>Testbestand dat ik erg graag werkende wilde hebben</figcaption>
-                        </div>
-                    </div>
+                    </ng-template>
                 </div>
             </div>
         </div>

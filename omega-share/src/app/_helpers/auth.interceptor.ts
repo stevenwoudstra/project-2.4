@@ -18,7 +18,9 @@ export class AuthInterceptor implements HttpInterceptor {
     const refToken = this.token.getRefToken();
     if (token != null) {
       const kaas: string = TYPE + token;
-      authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, kaas) });
+      authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, kaas).set('Cache-Control', 'no-cache, no-store, must-revalidate')
+      .set('Pragma', 'no-cache')
+      });
     } else if((refToken != null) && (req.url.endsWith("/user/refresh"))){
       console.log(req)
       const kaas: string = TYPE + refToken;

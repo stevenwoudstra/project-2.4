@@ -5,6 +5,8 @@ import { User } from '../../user'
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/_services/auth.service';
 import { FileService } from 'src/app/_services/file.service';
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +27,8 @@ export class ProfileComponent implements OnInit {
   isSuccessful: any;
   user: any;
 
+  files: any;
+
   errorMessage: any;
   constructor(private userService: UserService, private token: TokenStorageService, private authService: AuthService, private router: Router, private fileService: FileService) { }
 
@@ -35,7 +39,6 @@ export class ProfileComponent implements OnInit {
       userToken.username,
       userToken.role,
       );
-      console.log(this.user);
     document.getElementById("banner")!.style.backgroundImage = "url('" + this.banner + "')";
 
     this.userService.getUserProfile().subscribe(
@@ -48,7 +51,7 @@ export class ProfileComponent implements OnInit {
         if(data.profile_picture =! null) {
           this.getImageFromService();
           console.log("kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas");
-        } else{ 
+        } else { 
           this.isImageLoading = false
         }
       },
@@ -56,7 +59,16 @@ export class ProfileComponent implements OnInit {
         this.errorMessage = err.error.message;
       }
     );
-    console.log(this.user);
+
+    this.fileService.getFiles().subscribe(
+      data => {
+        this.files = data
+        console.log(data)
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      }
+    );
   }
 
   getRandomType(): string {
@@ -125,5 +137,12 @@ export class ProfileComponent implements OnInit {
       this.isImageLoading = false;
       console.log(error);
     });
-}
+  }
+  downloadFile(id: any, name: any) {
+    this.fileService.getFile(id).subscribe(
+      data => saveAs(data, name),
+      error => {console.log(error);}
+      
+    );
+  }
 }

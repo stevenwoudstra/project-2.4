@@ -39,7 +39,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
 app.config['UPLOAD_FOLDER'] = './Files'
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'docx'}
+ALLOWED_EXTENSIONS = {'ai', 'vob', 'pdf', 'mpp', 'mpeg', 'ogv', 'doc', 'xml', 'f4v', 'psd', 'pwz', 'dxl', 'vsx', 'mpw', 'xls', 'vsd', 'eml', 'ps', 'f4a', 'xlsx', 'mpt', 'ods', 'doch', 'avi', 'ppsx', 'html', 'jpg', 'pubm', 'webm', 'flv', 'jpeg', 'pubh', 'log', 'txt', 'swf', 'potx', 'ppt', 'wav', 'gif', 'an', 'wma', 'acc', 'mp3', 'lr', 'potm', 'svg', 'midi', 'mov', 'zip', 'vdx', 'bmp', 'poth', 'mkv', 'vtx', 'prem', 'pps', 'ind', 'dat', 'tiff', 'ost', 'ogg', 'm4v', 'mdb', 'vss', 'rp', 'msg', 'jpp', 'pub', 'mbox', 'pptx', 'xd', 'ae', 'csv', 'dxf', 'dw', 'wdp', 'vcf', 'pst', 'ppth', 'unknown', 'docm', 'eps', 'wmv', 'png', 'url', 'pptm', 'mpx', 'one', 'xlsm', 'php', 'dwfx', 'sql', 'oga', 'rtf', 'mp4', 'pot', 'mpg', 'fs', 'dgn', 'tif', 'dwg', 'docx', 'doth', 'vst'}
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -48,8 +48,9 @@ jwt = JWTManager(app)
 
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):
-    identity = jwt_data["sub"]
-    return User.query.filter_by(id=identity).one_or_none()
+	identity = jwt_data["sub"]
+	print(identity)
+	return User.query.filter_by(id=identity).one_or_none()
 
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
@@ -64,12 +65,13 @@ def allowed_file(filename):
 	return ('.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS)
 
-def save_file_to_ddb(user, url, type):
+def save_file_to_ddb(user, url, type, name):
 
 	file = File(
 				url = url,
 				user_id = user.id,
-				type=type
+				type=type,
+				name=name,
 				)
 	
 	db.session.add(file)
@@ -201,7 +203,7 @@ def upload_profile_picture():
 	file.save(full_path)
 	# print(request.__dir__())
 	
-	profile_pic = save_file_to_ddb(user = current_user, url=full_path, type="ProfilePic")
+	profile_pic = save_file_to_ddb(user = current_user, url=full_path, type="ProfilePic", name=secure_filename(file.filename))
 	current_user.profile_picture = profile_pic.id
 	db.session.commit()
 	return {"message":"oke", "picture_id": profile_pic.id}
@@ -226,7 +228,7 @@ def upload_file():
 	
 	file.save(full_path)
 	
-	saved_file = save_file_to_ddb(user = current_user, url=full_path, type="file")
+	saved_file = save_file_to_ddb(user = current_user, url=full_path, type="file", name=secure_filename(file.filename))
 	user_list = get_file_users(dict(request.form))
 	for user in user_list:
 		user.files.append(saved_file)
@@ -302,15 +304,44 @@ def get_user():
 @jwt_required()
 def get_profile_picture():
 	user = current_user
-	file = get_file_by_id(current_user.profile_picture)
+	if not user.profile_picture:
+		return make_response({'err':'user has no picture saved' }, 404)
+	file = get_file_by_id(user.profile_picture)
 	file_info = file.meta_data()
 	print(file_info)
 	return send_from_directory(	
 								file_info['path'], 
-								filename = file_info['name'], 
+								filename = file_info['local_name'], 
 								as_attachment = True,
 								)
 
+@app.route("/file/files", methods=['GET'])
+@cross_origin()
+@jwt_required()
+def get_file_list():
+	user = current_user
+	file_list = []
+	for file in user.files:
+		file_list.append(file.meta_data())
+	return jsonify(file_list)
+
+@app.route("/file/<id>", methods=['GET'])
+@cross_origin()
+@jwt_required()
+def get_file(id):
+	user = current_user
+	if not user.files:
+		return make_response({'err':'user has no files saved' }, 404)
+	file = get_file_by_id(id)
+	if user not in file.users:
+		return make_response({'err': 'user has no acces'}, 401)
+	file_info = file.meta_data()
+	print(file_info)
+	return send_from_directory(	
+								file_info['path'], 
+								filename = file_info['local_name'], 
+								as_attachment = True,
+								)
 
 ###401
 
@@ -389,7 +420,7 @@ class User(db.Model):
 	admin = db.Column(db.Boolean, default=False)
 	files = db.relationship('File',
 							secondary=shares,
-							backref=db.backref('users', lazy=True)
+							backref=db.backref('users')
 							)
 
 	def __repr__(self):
@@ -400,16 +431,21 @@ class File(db.Model):
 	url = db.Column(db.String(256), unique=True, nullable=False)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 	type = db.Column(db.String(15))
+	name = db.Column(db.String(64), nullable=False)
 
 	def __repr__(self):
 		return '<File %r>' % self.url
 
 	def meta_data(self):
+		id = self.id
 		url_list = self.url.split("/")
-		name = url_list.pop()
+		local_name = url_list.pop()
 		path = '/'.join(url_list)
+		type = local_name.rsplit('.', 1)[1].lower()
+		user_id = self.user_id
+		name = self.name
 	
-		return {"name": name, "path": path, "full_path": self.url}
+		return {"id": id, "name": name, "local_name": local_name, "path": path, "full_path": self.url, "type": type, "user_id": user_id,}
 
 
 ###JWT
