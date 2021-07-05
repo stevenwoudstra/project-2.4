@@ -90,11 +90,11 @@
 	border-radius: 3px;
 	text-align: center;
     position: fixed;
-
+    overflow: hidden;
 }
 
-.dropzone.img-thumbnail{background-color:rgba(0, 0, 0, 0.3)}
-.dropzone.img-thumbnail:hover{background-color:rgba(0, 0, 0, 0.2)}
+#dropzone {background-color:rgba(0, 0, 0, 0.3)}
+#dropzone:hover {background-color:rgba(0, 0, 0, 0.2)}
 
 .upload-icon {
 	margin: 45px 2px 2px 2px;

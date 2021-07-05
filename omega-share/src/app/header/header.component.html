@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-sm">
+<nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-sm" style="z-index: 6;">
     <div class="container-fluid">
         <button id="navbar-btn" class="navbar-toggler collapsed" data-bs-toggle="collapse"
             data-bs-target="#collapse_target" aria-label="open navbar">
@@ -93,3 +93,8 @@
         </div>
     </div>
 </nav>
+<div id="top-message" class="text-center" style="position: fixed; width: 100%; transform: translateY(-1rem); transition: transform 1s ease-in-out; z-index: 5;">
+    <div class="alert alert-success" style="display: table; margin: 0 auto">
+        successfully uploaded file
+    </div>
+</div>

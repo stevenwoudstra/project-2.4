@@ -37,7 +37,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 #app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
-app.config['UPLOAD_FOLDER'] = './Files'
+app.config['UPLOAD_FOLDER'] = 'Files'
 
 ALLOWED_EXTENSIONS = {'ai', 'vob', 'pdf', 'mpp', 'mpeg', 'ogv', 'doc', 'xml', 'f4v', 'psd', 'pwz', 'dxl', 'vsx', 'mpw', 'xls', 'vsd', 'eml', 'ps', 'f4a', 'xlsx', 'mpt', 'ods', 'doch', 'avi', 'ppsx', 'html', 'jpg', 'pubm', 'webm', 'flv', 'jpeg', 'pubh', 'log', 'txt', 'swf', 'potx', 'ppt', 'wav', 'gif', 'an', 'wma', 'acc', 'mp3', 'lr', 'potm', 'svg', 'midi', 'mov', 'zip', 'vdx', 'bmp', 'poth', 'mkv', 'vtx', 'prem', 'pps', 'ind', 'dat', 'tiff', 'ost', 'ogg', 'm4v', 'mdb', 'vss', 'rp', 'msg', 'jpp', 'pub', 'mbox', 'pptx', 'xd', 'ae', 'csv', 'dxf', 'dw', 'wdp', 'vcf', 'pst', 'ppth', 'unknown', 'docm', 'eps', 'wmv', 'png', 'url', 'pptm', 'mpx', 'one', 'xlsm', 'php', 'dwfx', 'sql', 'oga', 'rtf', 'mp4', 'pot', 'mpg', 'fs', 'dgn', 'tif', 'dwg', 'docx', 'doth', 'vst'}
 
@@ -455,7 +455,7 @@ class TokenBlocklist(db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
 
 if __name__ == "__main__":
-	app.run( ssl_context='adhoc')
+	app.run()
 	db.create_all()
 
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 const API_URL = 'http://stevenik.nl:5000/';
@@ -15,6 +15,8 @@ const httpOptions = {
 export class FileService {
   constructor(private http: HttpClient) { }
 
+  public fileConfirmation: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   postProfilePicture(file: any): Observable<any> {
     const data = new FormData();
     data.append('file', file)
@@ -28,7 +30,7 @@ export class FileService {
     if (users) {
       data.append('users', users)
     }
-    
+    this.fileConfirmation.next(true);    
     return this.http.post(API_URL + 'file/upload', data)
   }
 

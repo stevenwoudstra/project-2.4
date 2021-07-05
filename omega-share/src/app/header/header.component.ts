@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { AuthService } from '../_services/auth.service';
+import { FileService } from '../_services/file.service';
 import { TokenStorageService } from './../_services/token-storage.service';
 
 @Component({
@@ -15,10 +16,20 @@ export class HeaderComponent implements OnInit {
   username: any;
   profilePicture: string = "assets/placeholder pictures/stock_profile_picture.png";
 
-  constructor(private tokenStorageService: TokenStorageService, private authService: AuthService, private router: Router) {
+  constructor(private tokenStorageService: TokenStorageService, private authService: AuthService, private router: Router, private fileService: FileService) {
     router.events.subscribe((val) => {
       this.closeMobileNavbar();
   });
+  fileService.fileConfirmation.subscribe(e => {
+    if(e == true) {
+      router.navigate(['/profile']);
+      document.getElementById("top-message")!.style.transform = "translateY(3.8rem)";
+      setTimeout(() => {      
+        document.getElementById("top-message")!.style.transform = "translateY(-1rem)";
+        fileService.fileConfirmation.next(false);
+      }, 5000);
+    }
+  })
   }
   
   ngOnInit(): void {
